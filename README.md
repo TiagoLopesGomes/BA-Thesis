@@ -1,7 +1,27 @@
 # BA-Thesis
 My BA Thesis concerning bioinformatical analysis of IDP (intrinsically disordered proteins)
 
-# Programms:
+# Programms used:
+
+## afterIUPred.py
+Script takes the data from iupred2a and divide it to two files. In one there are fragments of proteins which were classified as IDP-like, and in the other there are fragments classified as nonIDP. One protein sequence can be splited many time, in particular into very small fragments (for example of length 1). So the script takes advantage of running mean to make the predictive function smooth and get more longer sequences.
+
+```bash
+$ ./afterIUPred.py -i iupred_20-30k 
+$ head nonIDP_10-20k.fasta 
+>UniRef50_A8PWH1 Structure-specific endonuclease subunit SLX1 n=1 Tax=Malassezia globosa (strain ATCC MYA-4612 / CBS 7966) TaxID=425265 RepID=SLX1_MALGO
+MRISSVVEHRTPRVYVCYCLRSLSRPNQTYIGS
+QHNGLVKQGAFYTRMARPWTMDVVVYGFPSKLAALQFEWSWQKPHASRHLR
+ATAAVYAGRSSKPLFPATRS
+RVRMRSSTVPEYKFLVLRALLASEPFCFWHLHVGFYSEYAYGVWQFMDRANPTRYSVSRITRRPLPPSYPPVACDF
+SYPVLPEATTETLGLTWEQLEHAP
+LRSHTSFLEALDQDASALEAHLVHASRKDMSSSICGLCGGHINRHVPLSYTHCPHACDAVFHLTCLARYSLEQETRAHARTFCLPTSAWCPMCQRPPVPWPEIVRRVFRRAELKVSM
+
+>UniRef50_A9BER7 GMP synthase [glutamine-hydrolyzing] n=547 RepID=GUAA_PETMO
+MEKILVIDYGSQYTQLLAKRIRDLGVFSEVIQYDDNISLSNVKGIILSGGPDSVYNIDAPDISDEILNAELPILGICYGMQLIAKKLGGKVEQRGIAEYGKTKINITDQSLLFKKIPSTFNVWMSHKDMVTKVPEKFKITSLTSNNIISSFENESENIYCIQFHPEVRHTEFGIDILKNFIQGICGLKGSWTLMDFVENKIKEIKDTIGDKKAIIALSGGVDSSVAAVLTHRAIGNNLKAIFVNHGFLRMNEVEEVESTFRDYMGLNLTTVDAQERFLSKLKGVTDPEQKRKIIGEEFIRVFEQEAKKEEGCEYLIQGTIYSDVIESAKSGKKTFKIKSHHNVGGLPEDIDLKIVEPLKELFKDEVRSVGEILGLPREILYRHPFPGPGLAIRIMGEINDEKLTILKKVDNIFINTLKETGWYDKVWQAFAVLIPVKTVGITGDKRSYGYVAALRSVDSVEGMTADWSKVPFEILDLVSSRITNEVEEITRVVYDISSKPPATIEWE
+```
+
+
 ## divider.py
 This script returns n-meres sequences of proteins which were provided. 
 It takes as an input .fasta file with many protein sequences and n which is the length of meres.
@@ -9,11 +29,11 @@ Additionaly this program counts the number of occurances of all meres.
 
 As an example:
 ```bash
-./divider.py -i text.fasta -n 5 
+./divider.py -i test.fasta -n 5 
 ```
 returns a file 
 ```bash
-cat test_5-meres
+$ cat test_5-meres
 AAAAA	5490
 LLLLL	3391
 HTGEK	3059
@@ -34,11 +54,11 @@ This program is for anylysis of short n-meres-peptides in proteins. It returns z
 Input file should contain nmeres with its counts in dataset.
 
 ```bash
-./someStats.py -i test_5-meres -n 5
+$ ./someStats.py -i test_5-meres -n 5
 ```
 Output file is all possible n-mers with its z-score.
 ```bash
-cat test_5-meres_ZScores
+$ cat test_5-meres_ZScores
 HTGEK	496.95
 TGEKP	415.91
 GEKPY	407.37
@@ -49,4 +69,35 @@ RIHTG	252.2
 KPYEC	223.42
 ...
 ```
+
+## hydroph.R
+Script for assigning a hydrophobicity for a column of n-mer sequences
+```bash
+$ ./hydroph.R test_5-meres_ZScores > test_5-meres_Z_hydr
+
+HTGEK 	496.95 	0.426 
+TGEKP 	415.91 	0.672 
+GEKPY 	407.37 	0.616 
+CGKAF 	395.1 	-0.342 
+IHTGE 	312.81 	-0.08 
+ECGKA 	269.92 	0.248 
+RIHTG 	252.2 	0.136 
+KPYEC 	223.42 	0.266 
+KPYKC 	215.15 	0.38 
+HQRIH 	183.05 	0.146 
+
+```
+
+
+
+## comparator.py
+This program compares two files with n-meres and their z-scores (and optionally hydrophobicity).
+The result is a plot comparing two sets of proteins or file with merged columns.
+```bash
+$ ./comparator.py -i nonIDP_Z_hydr -j IDP_Z_hydr -p plot -b
+```
+
+
+
+
 
