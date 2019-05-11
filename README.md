@@ -1,5 +1,16 @@
 # BA-Thesis
-My BA Thesis concerning bioinformatical analysis of IDP (intrinsically disordered proteins)
+My BA Thesis concerning bioinformatical analysis of IDP (intrinsically disordered proteins).
+
+IDP are proteins that lack a fixed or ordered three-dimensional structure. 
+My goal was to check if such a proteins differ from normal (that is structurized) proteins in amino acid composition. If yes, how? 
+
+
+Because there is not much experimentally confirmed IDP proteins (less than 3000 sequences in disprot database), results would be statisticaly not significant. So I've decided to use program ([IUPred2a](https://iupred2a.elte.hu)) which predicts if protein or its part is IDP or not. Dataset of sequences which I have used is UniRef50. It is nonredundant and clustered database of all known sequences.
+After predicting "IDPcity" of approximately 171 000 sequences I have splited obtained sequences into two groups: IDP and nonIDP using **afterIUPred.py**. In the next step I extracted from each sequence n-meres and counted them (I've received almost all possible permutations of 5-meres) by **divider.py**. 
+Because of the fact that in some organisms aminoacids have different usage I've calculated z-scores of every n-mere using the size of permutation group for which it belong. This was done using **someStats.py** script.
+Hydrophobicity of n-meres was calculated by **hydroph.R** with [Peptides](https://github.com/cran/Peptides) package. 
+Obtained data were next comapred (**comparator.py**).
+
 
 # Programms used:
 
